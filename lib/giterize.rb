@@ -6,20 +6,20 @@ class Giterize
   def process
     Dir.chdir(@path)
     `git init`
-    commit_files
+    commit_and_cleanup_files
   end
 
   private
 
-  def commit_files
+  def commit_and_cleanup_files
     Dir.foreach(@path) do |file|
       next if [".", "..", ".git"].include?(file)
-      new_name = drop_version(file)
+      new_name = remove_version(file)
       `mv #{file} #{new_name}; git add #{new_name}; git commit -m "adding #{file} as #{new_name}"`
     end
   end
 
-  def drop_version(f)
+  def remove_version(f)
     f.gsub(/_v\d+/, "")
   end
 end
